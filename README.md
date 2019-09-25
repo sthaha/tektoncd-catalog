@@ -1,102 +1,30 @@
-# Tekton Catalog
+# Openshift TektonCD Catalog
 
-This repository contains a catalog of `Task` resources (and someday
-`Pipeline`s and `Resource`s), which are designed to be reusable in many
-pipelines.
+This repository holds Openshift's fork of
+[`tektoncd/catalog`](https://github.com/tektoncd/catalog) with additions and
+fixes needed only for the OpenShift side of things.
 
-Each `Task` is provided in a separate directory along with a README.md and a
-Kubernetes manifest, so you can choose which `Task`s to install on your
-cluster.
+## How this repository works ?
 
-## `Task` Kinds
+The `master` branch holds up-to-date specific [openshift files](./openshift)
+that are necessary for CI setups and maintaining it. This includes:
 
-There are two kinds of `Task`s:
+- Scripts to create a new release branch from `upstream`
+- CI setup files
+  - tests scripts
 
- 1. `ClusterTask` with a Cluster scope, which can be installed by a cluster
-    operator and made available to users in all namespaces
- 2. `Task` with a Namespace scope, which is designed to be installed and used
-    only within that namespace.
+Each release branch holds the upstream code for that release and our
+openshift's specific files.
 
-`Task`s in this repo are namespace-scoped `Task`s, but can be installed as
-`ClusterTask`s by changing the `kind`.
+## CI Setup
 
-## Using `Task`s
+For the CI setup, two repositories are of importance:
 
-First, install a `Task` onto your cluster:
+- This repository
+- [openshift/release](https://github.com/openshift/release) which
+  contains the configuration of CI jobs that are run on this
+  repository
 
-```
-$ kubectl apply -f bazel.yaml
-task.tekton.dev/bazel created
-```
-
-You can see which `Task`s are installed using `kubectl` as well:
-
-```
-$ kubectl get tasks
-NAME    AGE
-bazel   3s
-```
-
-*OR*
-
-```
-$ kubectl get clustertasks
-NAME            AGE
-cluster-bazel   3s
-```
-
-With the `Task` installed, you can define a `TaskRun` that runs that `Task`,
-being sure to provide values for required input parameters and resources:
-
-```
-apiVersion: tekton.dev/v1alpha1
-kind: TaskRun
-metadata:
-  name: example-run
-spec:
-  taskRef:
-    name: bazel
-  inputs:
-    params:
-    - name: TARGET
-      value: //path/to/image:publish
-    resources:
-    - name: source
-      resourceSpec:
-        type: git
-        params:
-        - name: url
-          value: https://github.com/my-user/my-repo
-```
-
-Next, create the `TaskRun` you defined:
-
-```
-$ kubectl apply -f example-run.yaml
-taskrun.tekton.dev/example-run created
-```
-
-You can check the status of the `TaskRun` using `kubectl`:
-
-```
-$ kubectl get taskrun example-run -oyaml
-apiVersion: tekton.dev/v1alpha1
-kind: TaskRun
-metadata:
-  name: example-run
-spec:
-  ...
-status:
-  completionTime: "2019-04-25T18:10:09Z"
-  conditions:
-  - lastTransitionTime: "2019-04-25T18:10:09Z"
-    status: True
-    type: Succeeded
-...
-```
-
-## Contributing and Support
-
-If you want to contribute to this repository, please see our [contributing](./CONTRIBUTING.md) guidelines.
-
-If you are looking for support, enter an [issue](https://github.com/tektoncd/catalog/issues/new) or join our [Slack workspace](https://tektoncd.slack.com/)
+All of the following is based on OpenShift’s CI operator
+configs. General understanding of that mechanism is assumed in the
+following documentation.
