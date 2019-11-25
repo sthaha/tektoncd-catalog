@@ -14,10 +14,10 @@ source $(dirname $0)/../test/e2e-common.sh
 cd $(dirname $(readlink -f $0))/..
 
 # Give these tests the priviliged rights
-PRIVILEGED_TESTS="buildah kaniko"
+PRIVILEGED_TESTS="buildah kaniko s2i"
 
 # Skip Those
-SKIP_TESTS="s2i"
+SKIP_TESTS=""
 
 # Service Account used for image builder
 SERVICE_ACCOUNT=builder
