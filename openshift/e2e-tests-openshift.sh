@@ -29,7 +29,8 @@ SERVICE_ACCOUNT=builder
 PIPELINES_CATALOG_URL=https://github.com/openshift/pipelines-catalog/
 PIPELINES_CATALOG_REF=origin/master
 PIPELINES_CATALOG_DIRECTORY=./openshift/pipelines-catalog
-PIPELINES_CATALOG_IGNORE="s2i-dotnet-1"
+# We are skipping e2e test for dotnet3 as the builder image is not publicly available yet
+PIPELINES_CATALOG_IGNORE="s2i-dotnet-3"
 PIPELINES_CATALOG_PRIVILIGED_TASKS="s2i-*"
 
 CURRENT_TAG=$(git describe --tags 2>/dev/null || true)
