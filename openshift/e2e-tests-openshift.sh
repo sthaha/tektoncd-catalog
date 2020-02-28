@@ -14,7 +14,7 @@ source $(dirname $0)/../test/e2e-common.sh
 cd $(dirname $(readlink -f $0))/..
 
 # Give these tests the priviliged rights
-PRIVILEGED_TESTS="buildah kaniko s2i buildpacks jib-gradle"
+PRIVILEGED_TESTS="buildah kaniko s2i buildpacks"
 
 # Skip Those
 SKIP_TESTS=""
